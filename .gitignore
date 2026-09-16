@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+node_modules/
+__pycache__/
+*.pyc
+.wrangler/
+.dev.vars
+scripts/_out/
+*.log
+.DS_Store
+Thumbs.db

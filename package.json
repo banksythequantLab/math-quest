@@ -1,0 +1,14 @@
+{
+  "name": "math-quest",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Kid-friendly K-5 math tabletop RPG. Nemotron DM on Nebius Token Factory.",
+  "license": "MIT",
+  "author": "Banksy AI LLC",
+  "scripts": {
+    "test": "node --test",
+    "dev": "wrangler pages dev public",
+    "monsters": "python scripts/gen_monsters.py"
+  }
+}
