@@ -2,16 +2,12 @@
 // Rule of the game: the math problem IS the dice roll. Right = success, wrong = the monster's turn.
 // The DM (LLM) narrates this state; it never decides outcomes.
 import { makeProblem, checkAnswer, recordResult } from "./math-engine.js";
+import { CAMPAIGNS, PATH, CAST } from "./content.js";
 
 export const PATH_LENGTH = 6;         // encounters per quest; the last is the boss
 export const MAX_HEARTS = 3;
 export const BOSS = "king";
-
-export const QUESTS = [
-  { id: "bell",    goal: "The Goblin King snatched the village bell. Get it back before the harvest feast!", reward: "the Village Bell" },
-  { id: "lantern", goal: "Every lantern in Willowdale went dark. The Goblin King has the Ember Stone that lights them.", reward: "the Ember Stone" },
-  { id: "recipe",  goal: "The Goblin King stole Grandma Fig's pie recipe. The bake-off is tomorrow!", reward: "Grandma Fig's recipe" },
-];
+export const QUESTS = CAMPAIGNS;
 
 // What the kid can do in a scene. band delta = how hard the roll is vs the kid's level.
 export const ACTIONS = {
@@ -32,17 +28,25 @@ const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 export function newQuest(profile, monstersByBand, rnd = Math.random) {
   const q = QUESTS[Math.floor(rnd() * QUESTS.length)];
   return {
-    id: q.id, goal: q.goal, reward: q.reward,
-    step: 1, hearts: MAX_HEARTS, inventory: [], log: [],
+    id: q.id, title: q.title, goal: q.goal, reward: q.reward,
+    step: 1, hearts: MAX_HEARTS, inventory: [], log: [], clues: [], allies: [],
     scene: newScene(1, profile.band, monstersByBand, rnd),
     status: "active",
   };
 }
+// Authored beat for the current step (place, the monster's role in the plot, the clue it yields).
+export function beatOf(quest) {
+  const c = CAMPAIGNS.find((x) => x.id === quest.id) || CAMPAIGNS[0];
+  const b = c.beats[Math.min(quest.step, PATH_LENGTH) - 1];
+  return { location: PATH[Math.min(quest.step, PATH_LENGTH) - 1], ...b, cast: CAST[quest.scene.monster] || { name: quest.scene.monster, persona: "a grove creature", want: "", voice: "" } };
+}
 
 // monstersByBand(band) -> array of monster ids that fit this band
-export function newScene(step, band, monstersByBand, rnd = Math.random) {
+export function newScene(step, band, monstersByBand, rnd = Math.random, avoid = []) {
   const boss = step >= PATH_LENGTH;
-  const pool = boss ? [BOSS] : monstersByBand(band).filter((m) => m !== BOSS);
+  let pool = boss ? [BOSS] : monstersByBand(band).filter((m) => m !== BOSS && !avoid.includes(m));
+  if (!pool.length && !boss) pool = [...monstersByBand(band), ...monstersByBand(Math.max(1, band - 1)), ...monstersByBand(Math.min(5, band + 1))].filter((m) => m !== BOSS && !avoid.includes(m));
+  if (!pool.length && !boss) pool = monstersByBand(band).filter((m) => m !== BOSS);
   const monster = pool.length ? pool[Math.floor(rnd() * pool.length)] : "goblin";
   return { monster, boss, monsterHearts: boss ? 3 : (band >= 4 ? 2 : 1), phase: "choose", action: null, problem: null };
 }
@@ -118,9 +122,13 @@ function advance(q, loot, how, band = 1, monstersByBand = () => ["goblin"], rnd 
              : how === "sneak" ? `Snuck past the ${s.monster}.`
              : `Talked the ${s.monster} into letting them pass${loot ? ` — it gave them a ${ITEMS[loot].name}` : ""}.`;
   const inventory = loot ? [...q.inventory, loot].slice(0, 6) : q.inventory;
+  const clue = beatOf(q).clue;
+  const clues = clue ? [...(q.clues || []), clue] : (q.clues || []);
+  const allies = how === "talk" && !s.boss ? [...new Set([...(q.allies || []), s.monster])] : (q.allies || []);
   const step = q.step + 1;
-  const scene = step > PATH_LENGTH ? { ...s, phase: "done" } : newScene(step, band, monstersByBand, rnd);
-  return { ...q, step: Math.min(step, PATH_LENGTH), inventory, log: pushLog(q.log, line), scene };
+  const seen = [...new Set([...(q.seen || []), s.monster])];
+  const scene = step > PATH_LENGTH ? { ...s, phase: "done" } : newScene(step, band, monstersByBand, rnd, [...seen, ...allies]);
+  return { ...q, step: Math.min(step, PATH_LENGTH), inventory, clues, allies, seen, log: pushLog(q.log, line), scene };
 }
 const pickLoot = (rnd) => LOOT_TABLE[Math.floor(rnd() * LOOT_TABLE.length)];
 const pushLog = (log, line) => [...(log || []), line].slice(-6);

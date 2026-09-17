@@ -7,7 +7,8 @@
 //   GET  /api/profile?kid=name            -> profile (+ quest)
 // src/math-engine.js sets & grades every problem; src/quest.js owns the rules; the DM only narrates.
 import { BANDS } from "../src/math-engine.js";
-import { newQuest, chooseAction, resolveRoll, useItem, publicQuest, ITEMS, ACTIONS } from "../src/quest.js";
+import { newQuest, chooseAction, resolveRoll, useItem, publicQuest, beatOf, ITEMS, ACTIONS } from "../src/quest.js";
+import { LOCATIONS } from "../src/content.js";
 import { narrate } from "./dm.js";
 import monsters from "../public/monsters/manifest.json" with { type: "json" };
 
@@ -26,7 +27,9 @@ const save = (env, p) => env.KIDS.put(`kid:${p.kid}`, JSON.stringify(p));
 const dmArgs = (profile) => ({ hero: profile.hero, quest: profile.quest, monsterDesc: descOf(profile.quest.scene.monster), profile });
 const view = (profile, extra = {}) => {
   const { quest, ...rest } = profile;
-  return json({ profile: { ...rest, bandName: BANDS[profile.band].name }, quest: publicQuest(quest), items: ITEMS, actions: ACTIONS, ...extra });
+  const beat = quest ? beatOf(quest) : null;
+  return json({ profile: { ...rest, bandName: BANDS[profile.band].name }, quest: publicQuest(quest), items: ITEMS, actions: ACTIONS,
+                scene: beat ? { location: beat.location, place: LOCATIONS[beat.location].name, monsterName: beat.cast.name } : null, ...extra });
 };
 
 export async function handleApi(request, env, fetchImpl = fetch) {
@@ -69,7 +72,8 @@ export async function handleApi(request, env, fetchImpl = fetch) {
     profile = { ...r.profile, quest: r.quest }; await save(env, profile);
     // Narrate the outcome against the scene it happened in, then (if a new scene began) open the next one.
     const outcomeDm = await narrate(env, "result", { hero: profile.hero, quest: before, monsterDesc: descOf(before.scene.monster), profile,
-                                                    action: r.outcome.action, outcome: r.outcome.kind, loot: r.outcome.loot ? ITEMS[r.outcome.loot].name : null }, fetchImpl);
+                                                    action: r.outcome.action, outcome: r.outcome.kind, loot: r.outcome.loot ? ITEMS[r.outcome.loot].name : null,
+                                                    clue: (r.quest.clues?.length > (before.clues?.length || 0)) ? r.quest.clues.at(-1) : null }, fetchImpl);
     const newScene = r.quest.scene.phase === "choose" && (r.quest.step !== before.step || r.outcome.kind === "heroDown");
     const sameSceneChoice = r.quest.scene.phase === "choose" && !newScene;
     const dm = newScene ? await narrate(env, "scene", dmArgs(profile), fetchImpl)

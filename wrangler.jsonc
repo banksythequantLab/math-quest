@@ -9,7 +9,8 @@
   ],
   "vars": {
     "NEBIUS_BASE_URL": "https://api.tokenfactory.nebius.com/v1",
-    "DM_MODEL": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+    "DM_MODEL": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "DM_MODEL_SCENE": "nvidia/nemotron-3-super-120b-a12b"
   }
   // NEBIUS_API_KEY is a secret:  npx wrangler secret put NEBIUS_API_KEY
   // local dev: put NEBIUS_API_KEY=... in .dev.vars (gitignored)
