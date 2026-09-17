@@ -113,7 +113,7 @@ def main() -> int:
     for mid, band, desc in MONSTERS:
         if only and mid not in only:
             continue
-        entry = {"id": mid, "band": band, "seed": seed_for(mid), "states": {}}
+        entry = {"id": mid, "band": band, "desc": desc, "seed": seed_for(mid), "states": {}}
         for state in STATES:
             dest = OUT / f"{mid}_{state}.webp"
             entry["states"][state] = dest.name

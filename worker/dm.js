@@ -18,12 +18,13 @@ const FALLBACK = (m, hero) => ({
 
 const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : "Hero");
 
-export async function narrate(env, { hero, monster, band, event, lastResult }, fetchImpl = fetch) {
-  const user = event === "start"
+export async function narrate(env, { hero, monster, monsterDesc, band, event, lastResult }, fetchImpl = fetch) {
+  const look = monsterDesc ? ` The ${monster} looks like this (describe it faithfully, do not invent other colors or props): ${monsterDesc}.` : "";
+  const user = (event === "start"
     ? `Hero: ${hero}. A ${monster} (math band ${band}/5) blocks the path. Introduce the encounter.`
     : lastResult?.correct
-      ? `Hero: ${hero}. The ${lastResult.monster} got the challenge right and went dizzy. Now a ${monster} (band ${band}/5) appears. Celebrate briefly, then introduce the new monster.`
-      : `Hero: ${hero}. The hero missed the last challenge against the ${lastResult.monster}, the monster giggled, and the hero tries again with a ${monster} (band ${band}/5). Encourage, then introduce the monster.`;
+      ? `Hero: ${hero}. The hero beat the ${lastResult.monster}'s challenge and it went dizzy. Now a ${monster} (band ${band}/5) appears. Celebrate briefly, then introduce the new monster.`
+      : `Hero: ${hero}. The hero missed the last challenge against the ${lastResult.monster}, the monster giggled, and the hero tries again with a ${monster} (band ${band}/5). Encourage, then introduce the monster.`) + look;
   try {
     const res = await fetchImpl(`${env.NEBIUS_BASE_URL || "https://api.tokenfactory.nebius.com/v1"}/chat/completions`, {
       method: "POST",

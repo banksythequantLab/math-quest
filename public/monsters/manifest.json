@@ -2,8 +2,8 @@
   {
     "id": "goblin",
     "band": 1,
+    "desc": "small green goblin with big floppy ears and a tiny leather vest",
     "seed": 2236,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "goblin_idle.webp",
       "surprised": "goblin_surprised.webp",
@@ -13,8 +13,8 @@
   {
     "id": "orc",
     "band": 3,
+    "desc": "big burly orc with tusks, blue-grey skin, wearing a patched leather tunic",
     "seed": 636,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "orc_idle.webp",
       "surprised": "orc_surprised.webp",
@@ -24,8 +24,8 @@
   {
     "id": "troll",
     "band": 4,
+    "desc": "shaggy moss-covered troll with a flower growing on its head",
     "seed": 1649,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "troll_idle.webp",
       "surprised": "troll_surprised.webp",
@@ -35,8 +35,8 @@
   {
     "id": "slime",
     "band": 1,
+    "desc": "bouncy translucent blue slime blob with a happy face",
     "seed": 1587,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "slime_idle.webp",
       "surprised": "slime_surprised.webp",
@@ -46,8 +46,8 @@
   {
     "id": "bat",
     "band": 1,
+    "desc": "cartoon vampire bat monster, large purple leathery bat wings spread wide, pointed ears, fangs, hanging in the air",
     "seed": 640,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "bat_idle.webp",
       "surprised": "bat_surprised.webp",
@@ -57,8 +57,8 @@
   {
     "id": "mushroom",
     "band": 2,
+    "desc": "walking red-capped mushroom person with white spots",
     "seed": 3989,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "mushroom_idle.webp",
       "surprised": "mushroom_surprised.webp",
@@ -68,8 +68,8 @@
   {
     "id": "skeleton",
     "band": 2,
+    "desc": "silly cartoon skeleton in a tiny knitted hat, wobbling",
     "seed": 3922,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "skeleton_idle.webp",
       "surprised": "skeleton_surprised.webp",
@@ -79,8 +79,8 @@
   {
     "id": "gloomfang",
     "band": 2,
+    "desc": "the Gloomfang: shadowy many-legged lurker with glowing orange eyes, black and orange body, crouched in a dark web",
     "seed": 4739,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "gloomfang_idle.webp",
       "surprised": "gloomfang_surprised.webp",
@@ -90,8 +90,8 @@
   {
     "id": "kobold",
     "band": 2,
+    "desc": "tiny lizard kobold in oversized armor made of pots and pans",
     "seed": 2207,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "kobold_idle.webp",
       "surprised": "kobold_surprised.webp",
@@ -101,8 +101,8 @@
   {
     "id": "wolf",
     "band": 3,
+    "desc": "cartoon grey dire wolf monster, shaggy fur, glowing yellow eyes, red bandana",
     "seed": 1073,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "wolf_idle.webp",
       "surprised": "wolf_surprised.webp",
@@ -112,8 +112,8 @@
   {
     "id": "ogre",
     "band": 3,
+    "desc": "cartoon ogre monster, huge round belly, yellow-green skin, one horn, holding a giant sandwich",
     "seed": 1063,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "ogre_idle.webp",
       "surprised": "ogre_surprised.webp",
@@ -123,8 +123,8 @@
   {
     "id": "golem",
     "band": 4,
+    "desc": "stone golem made of stacked round pebbles with glowing rune eyes",
     "seed": 1598,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "golem_idle.webp",
       "surprised": "golem_surprised.webp",
@@ -134,8 +134,8 @@
   {
     "id": "harpy",
     "band": 4,
+    "desc": "cartoon harpy monster, half bird half person, colorful parrot feathers, large wings, talon feet",
     "seed": 1693,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "harpy_idle.webp",
       "surprised": "harpy_surprised.webp",
@@ -145,8 +145,8 @@
   {
     "id": "ghost",
     "band": 3,
+    "desc": "friendly bedsheet ghost with rosy cheeks",
     "seed": 1684,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "ghost_idle.webp",
       "surprised": "ghost_surprised.webp",
@@ -156,8 +156,8 @@
   {
     "id": "gnome",
     "band": 1,
+    "desc": "grumpy garden gnome with a pointy red hat and a watering can",
     "seed": 1597,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "gnome_idle.webp",
       "surprised": "gnome_surprised.webp",
@@ -167,8 +167,8 @@
   {
     "id": "wyrmling",
     "band": 5,
+    "desc": "baby dragon wyrmling with stubby wings hiccuping a tiny puff of smoke",
     "seed": 3903,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "wyrmling_idle.webp",
       "surprised": "wyrmling_surprised.webp",
@@ -178,8 +178,8 @@
   {
     "id": "minotaur",
     "band": 5,
+    "desc": "cartoon minotaur monster, bull head with big horns, muscular, brown fur, cowbell necklace",
     "seed": 3986,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "minotaur_idle.webp",
       "surprised": "minotaur_surprised.webp",
@@ -189,8 +189,8 @@
   {
     "id": "lich",
     "band": 5,
+    "desc": "cartoon skeletal lich sorcerer, purple robes, big wizard hat, glowing green eyes, crystal staff",
     "seed": 1031,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "lich_idle.webp",
       "surprised": "lich_surprised.webp",
@@ -200,8 +200,8 @@
   {
     "id": "mimic",
     "band": 4,
+    "desc": "treasure chest mimic with a goofy tongue and googly eyes",
     "seed": 1561,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "mimic_idle.webp",
       "surprised": "mimic_surprised.webp",
@@ -211,8 +211,8 @@
   {
     "id": "king",
     "band": 5,
+    "desc": "the Goblin King: goblin with a crooked golden paper crown and a cape",
     "seed": 1059,
-    "backend": "comfyui/dreamshaper_8.safetensors",
     "states": {
       "idle": "king_idle.webp",
       "surprised": "king_surprised.webp",

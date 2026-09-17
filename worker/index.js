@@ -30,6 +30,7 @@ export function buildEncounter(profile, seed = Date.now(), rnd = Math.random) {
   const { answer, ...safe } = problem;               // never ship the answer to the client
   return { monster, bandName: BANDS[profile.band].name, ...safe };
 }
+const descOf = (id) => monsters.find((m) => m.id === id)?.desc;
 
 export async function handleApi(request, env, fetchImpl = fetch) {
   const url = new URL(request.url);
@@ -49,7 +50,7 @@ export async function handleApi(request, env, fetchImpl = fetch) {
     profile.hero = slug(body.hero) || profile.hero || "nova";
     await saveProfile(env, profile);
     const encounter = buildEncounter(profile);
-    const dm = await narrate(env, { hero: profile.hero, monster: encounter.monster, band: profile.band, event: "start" }, fetchImpl);
+    const dm = await narrate(env, { hero: profile.hero, monster: encounter.monster, monsterDesc: descOf(encounter.monster), band: profile.band, event: "start" }, fetchImpl);
     return json({ profile, encounter: { ...encounter, dm } });
   }
 
@@ -64,7 +65,7 @@ export async function handleApi(request, env, fetchImpl = fetch) {
     profile = recordResult(profile, problem, correct);
     await saveProfile(env, profile);
     const encounter = buildEncounter(profile);
-    const dm = await narrate(env, { hero: profile.hero, monster: encounter.monster, band: profile.band, event: "next",
+    const dm = await narrate(env, { hero: profile.hero, monster: encounter.monster, monsterDesc: descOf(encounter.monster), band: profile.band, event: "next",
                                     lastResult: { correct, monster: slug(body.monster) || "monster" } }, fetchImpl);
     return json({ correct, answer: problem.answer, profile, encounter: { ...encounter, dm } });
   }

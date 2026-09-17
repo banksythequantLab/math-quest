@@ -106,7 +106,7 @@ def main() -> int:
     for mid, band, desc in items:
         if only and mid not in only:
             continue
-        entry = {"id": mid, "band": band, "seed": seed_for(mid), "backend": "comfyui/" + args.ckpt, "states": {}}
+        entry = {"id": mid, "band": band, "desc": desc, "seed": seed_for(mid), "backend": "comfyui/" + args.ckpt, "states": {}}
         for state in states:
             dest = out_dir / f"{mid}_{state}.webp"
             entry["states"][state] = dest.name
