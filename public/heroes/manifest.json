@@ -1,0 +1,46 @@
+[
+  {
+    "id": "nova",
+    "band": 0,
+    "seed": 1074,
+    "backend": "comfyui/dreamshaper_8.safetensors",
+    "states": {
+      "idle": "nova_idle.webp",
+      "cast": "nova_cast.webp",
+      "cheer": "nova_cheer.webp"
+    }
+  },
+  {
+    "id": "ember",
+    "band": 0,
+    "seed": 1587,
+    "backend": "comfyui/dreamshaper_8.safetensors",
+    "states": {
+      "idle": "ember_idle.webp",
+      "cast": "ember_cast.webp",
+      "cheer": "ember_cheer.webp"
+    }
+  },
+  {
+    "id": "kai",
+    "band": 0,
+    "seed": 616,
+    "backend": "comfyui/dreamshaper_8.safetensors",
+    "states": {
+      "idle": "kai_idle.webp",
+      "cast": "kai_cast.webp",
+      "cheer": "kai_cheer.webp"
+    }
+  },
+  {
+    "id": "willow",
+    "band": 0,
+    "seed": 2354,
+    "backend": "comfyui/dreamshaper_8.safetensors",
+    "states": {
+      "idle": "willow_idle.webp",
+      "cast": "willow_cast.webp",
+      "cheer": "willow_cheer.webp"
+    }
+  }
+]

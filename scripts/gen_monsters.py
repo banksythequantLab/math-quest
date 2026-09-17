@@ -32,26 +32,40 @@ STATES = {
 # (id, band 1-5, description). Band = which math level the monster typically guards.
 MONSTERS = [
     ("goblin",     1, "small green goblin with big floppy ears and a tiny leather vest"),
-    ("orc",        3, "big gentle orc with tusks, blue-grey skin, wearing a patched tunic"),
+    ("orc",        3, "big burly orc with tusks, blue-grey skin, wearing a patched leather tunic"),
     ("troll",      4, "shaggy moss-covered troll with a flower growing on its head"),
     ("slime",      1, "bouncy translucent blue slime blob with a happy face"),
-    ("bat",        1, "round fluffy purple bat with tiny fangs and big eyes"),
+    ("bat",        1, "cartoon vampire bat monster, large purple leathery bat wings spread wide, pointed ears, fangs, hanging in the air"),
     ("mushroom",   2, "walking red-capped mushroom person with white spots"),
     ("skeleton",   2, "silly cartoon skeleton in a tiny knitted hat, wobbling"),
-    ("spider",     2, "fuzzy round spider with eight sneakers and eight big eyes"),
+    ("gloomfang",  2, "the Gloomfang: shadowy many-legged lurker with glowing orange eyes, black and orange body, crouched in a dark web"),
     ("kobold",     2, "tiny lizard kobold in oversized armor made of pots and pans"),
-    ("wolf",       3, "fluffy grey wolf pup with a red bandana"),
-    ("ogre",       3, "round yellow ogre holding a giant sandwich"),
+    ("wolf",       3, "cartoon grey dire wolf monster, shaggy fur, glowing yellow eyes, red bandana"),
+    ("ogre",       3, "cartoon ogre monster, huge round belly, yellow-green skin, one horn, holding a giant sandwich"),
     ("golem",      4, "stone golem made of stacked round pebbles with glowing rune eyes"),
-    ("harpy",      4, "colorful parrot-feathered harpy kid with pigtails"),
+    ("harpy",      4, "cartoon harpy monster, half bird half person, colorful parrot feathers, large wings, talon feet"),
     ("ghost",      3, "friendly bedsheet ghost with rosy cheeks"),
     ("gnome",      1, "grumpy garden gnome with a pointy red hat and a watering can"),
     ("wyrmling",   5, "baby dragon wyrmling with stubby wings hiccuping a tiny puff of smoke"),
-    ("minotaur",   5, "fluffy minotaur calf with a cowbell and a lunchbox"),
-    ("lich",       5, "tiny purple lich in a big wizard hat holding a lollipop staff"),
+    ("minotaur",   5, "cartoon minotaur monster, bull head with big horns, muscular, brown fur, cowbell necklace"),
+    ("lich",       5, "cartoon skeletal lich sorcerer, purple robes, big wizard hat, glowing green eyes, crystal staff"),
     ("mimic",      4, "treasure chest mimic with a goofy tongue and googly eyes"),
     ("king",       5, "the Goblin King: goblin with a crooked golden paper crown and a cape"),
 ]
+
+# Playable heroes — original characters, elegant 3D animated-movie style (no real-franchise names).
+HERO_STATES = {
+    "idle":  "confident heroic pose, gentle smile",
+    "cast":  "casting a glowing magic spell, hands raised, sparkles of light",
+    "cheer": "celebrating with a fist pump and a big happy grin",
+}
+HEROES = [
+    ("nova",   "young sorceress with long dark curly hair in a braid, flowing violet and gold gown, glowing starlight staff"),
+    ("ember",  "brave boy knight with short red hair and freckles, polished copper and cream armor, small flame floating in his palm"),
+    ("kai",    "young ranger boy with tousled black hair, sea-green hooded cloak, glowing water bow"),
+    ("willow", "kind forest guardian girl with auburn hair and a flower crown, leaf-green cloak, vine staff, small fox companion"),
+]
+# 2 girls (nova, willow) + 2 boys (ember, kai)
 
 def build_prompt(desc: str, state: str) -> str:
     return f"{desc}, {STATES[state]}, {STYLE}"
