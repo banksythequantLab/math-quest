@@ -4,7 +4,7 @@
   "compatibility_date": "2026-06-23",
   "assets": { "directory": "./public", "binding": "ASSETS" },
   "kv_namespaces": [
-    { "binding": "KIDS", "id": "REPLACE_WITH_wrangler_kv_namespace_create_KIDS" }
+    { "binding": "KIDS", "id": "71681b4e9b8445739d2069cf615fadf9" }
   ],
   "vars": {
     "NEBIUS_BASE_URL": "https://api.tokenfactory.nebius.com/v1",
