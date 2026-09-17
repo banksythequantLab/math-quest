@@ -4,183 +4,232 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Math Quest: Goblin Grove</title>
-<meta name="description" content="A K-5 math adventure: every monster guards a math riddle, and an NVIDIA Nemotron Dungeon Master on Nebius narrates the quest.">
+<meta name="description" content="A D&D-style adventure for kids where every roll is a math problem. NVIDIA Nemotron Dungeon Master on Nebius.">
 <meta property="og:title" content="Math Quest: Goblin Grove">
-<meta property="og:description" content="Beat the monsters with math. Kid-safe AI Dungeon Master, adaptive K-5 levels.">
+<meta property="og:description" content="Pick a hero, chase the Goblin King, and roll with math. Kid-safe AI Dungeon Master.">
 <meta property="og:image" content="/heroes/ember_cast.webp">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#12213a; --panel:#1c3156; --ink:#f4f1ff; --gold:#ffcc4d; --good:#4ade80; --bad:#fb7185; --accent:#8b5cf6; }
+  :root { --bg:#12213a; --panel:#1c3156; --ink:#f4f1ff; --gold:#ffcc4d; --good:#4ade80; --bad:#fb7185; --accent:#8b5cf6; --dim:#33507f; }
   * { box-sizing:border-box; }
   body { margin:0; font-family:Fredoka, system-ui, sans-serif; background:radial-gradient(circle at 50% 0%, #24406e 0%, var(--bg) 60%); color:var(--ink); min-height:100vh; }
-  header { text-align:center; padding:14px 16px 4px; }
-  h1 { margin:0; font-size:clamp(24px,5vw,40px); color:var(--gold); letter-spacing:.5px; text-shadow:0 3px 0 #7a5a00; }
-  .sub { opacity:.75; font-size:14px; }
-  main { max-width:960px; margin:0 auto; padding:12px 16px 40px; }
+  header { text-align:center; padding:12px 16px 2px; }
+  h1 { margin:0; font-size:clamp(22px,5vw,36px); color:var(--gold); text-shadow:0 3px 0 #7a5a00; }
+  main { max-width:960px; margin:0 auto; padding:10px 14px 40px; }
   .screen { display:none; } .screen.on { display:block; }
-  .card { background:var(--panel); border-radius:20px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  .card { background:var(--panel); border-radius:20px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
   label { display:block; font-weight:600; margin:8px 0 4px; }
-  input[type=text] { width:100%; font:inherit; font-size:22px; padding:10px 14px; border-radius:14px; border:3px solid #33507f; background:#0f1b30; color:var(--ink); }
-  .heroes { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:12px 0; }
+  input[type=text] { width:100%; font:inherit; font-size:22px; padding:10px 14px; border-radius:14px; border:3px solid var(--dim); background:#0f1b30; color:var(--ink); }
+  .heroes { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:12px 0; }
   .hero { cursor:pointer; border:4px solid transparent; border-radius:18px; overflow:hidden; background:#0f1b30; text-align:center; transition:transform .15s; }
   .hero:hover { transform:translateY(-3px); } .hero.sel { border-color:var(--gold); }
   .hero img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
-  .hero .n { padding:6px; font-weight:700; } .hero .t { font-size:12px; opacity:.7; padding-bottom:6px; }
-  .btn { font:inherit; font-size:20px; font-weight:700; padding:12px 26px; border:0; border-radius:16px; cursor:pointer; background:var(--gold); color:#3a2a00; box-shadow:0 5px 0 #b38a1d; }
-  .btn:active { transform:translateY(3px); box-shadow:0 2px 0 #b38a1d; } .btn:disabled { opacity:.5; cursor:default; }
-  .btn.ghost { background:#33507f; color:var(--ink); box-shadow:0 5px 0 #1f3355; }
-  .arena { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:end; }
-  .fighter { text-align:center; } .fighter img { width:100%; max-width:300px; aspect-ratio:1; object-fit:cover; border-radius:18px; background:#0f1b30; transition:transform .3s; }
-  .fighter .name { font-weight:700; margin-top:6px; font-size:18px; }
-  .dizzy img { transform:rotate(-8deg) scale(.95); filter:saturate(.6); }
-  .bubble { background:#fff; color:#222; border-radius:16px; padding:10px 14px; margin:10px 0; position:relative; font-size:17px; }
+  .hero .n { padding:6px 6px 0; font-weight:700; } .hero .t { font-size:12px; opacity:.7; padding-bottom:8px; }
+  .btn { font:inherit; font-size:19px; font-weight:700; padding:12px 22px; border:0; border-radius:16px; cursor:pointer; background:var(--gold); color:#3a2a00; box-shadow:0 5px 0 #b38a1d; }
+  .btn:active { transform:translateY(3px); box-shadow:0 2px 0 #b38a1d; } .btn:disabled { opacity:.5; cursor:default; transform:none; }
+  .btn.ghost { background:var(--dim); color:var(--ink); box-shadow:0 5px 0 #1f3355; }
+  .quest { display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#0f1b30; border-radius:14px; padding:10px 14px; margin-bottom:10px; }
+  .quest .goal { flex:1; min-width:220px; font-size:15px; } .quest .goal b { color:var(--gold); }
+  .path { display:flex; gap:5px; align-items:center; } .path span { width:22px; height:22px; border-radius:50%; background:var(--dim); display:grid; place-items:center; font-size:12px; font-weight:700; }
+  .path span.done { background:var(--good); color:#053; } .path span.here { background:var(--gold); color:#3a2a00; box-shadow:0 0 0 3px #ffcc4d55; } .path span.boss { border:2px solid var(--bad); }
+  .arena { display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; }
+  .fighter { text-align:center; } .fighter img { width:100%; max-width:300px; aspect-ratio:1; object-fit:cover; border-radius:18px; background:#0f1b30; transition:transform .3s, filter .3s; }
+  .fighter .name { font-weight:700; margin-top:4px; font-size:18px; } .hearts { font-size:22px; letter-spacing:2px; min-height:28px; }
+  .dizzy img { transform:rotate(-8deg) scale(.95); filter:saturate(.5); } .hurt img { transform:translateX(-6px); filter:brightness(.7); }
+  .bubble { background:#fff; color:#222; border-radius:16px; padding:10px 14px; margin:10px 0 0; font-size:17px; }
   .bubble.dm { background:#e9e3ff; } .bubble .who { font-weight:700; color:var(--accent); margin-right:6px; }
-  .problem { text-align:center; font-size:clamp(40px,9vw,72px); font-weight:700; margin:8px 0; color:var(--gold); text-shadow:0 4px 0 #6b4d00; }
-  .answerRow { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; }
-  .answerRow input { max-width:220px; text-align:center; font-size:32px; }
-  .pad { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; max-width:520px; margin:12px auto 0; }
-  .pad button { font:inherit; font-size:24px; font-weight:700; padding:12px 0; border:0; border-radius:12px; background:#33507f; color:var(--ink); cursor:pointer; box-shadow:0 4px 0 #1f3355; }
-  .pad button:active { transform:translateY(3px); box-shadow:none; }
-  .status { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; font-size:15px; }
-  .ladder { display:flex; gap:6px; } .rung { width:34px; height:12px; border-radius:6px; background:#33507f; } .rung.lit { background:var(--good); }
-  .feedback { text-align:center; font-size:24px; font-weight:700; min-height:32px; margin-top:8px; }
-  .good { color:var(--good); } .bad { color:var(--bad); }
-  .hint { text-align:center; opacity:.85; margin-top:6px; min-height:22px; }
-  .foot { text-align:center; font-size:12px; opacity:.55; margin-top:18px; }
-  @media (max-width:560px) { .arena { grid-template-columns:1fr 1fr; } .pad { grid-template-columns:repeat(4,1fr); } }
+  .choices { display:grid; gap:10px; margin-top:12px; }
+  .choice { text-align:left; font:inherit; font-size:18px; padding:12px 14px; border:3px solid var(--dim); border-radius:14px; background:#0f1b30; color:var(--ink); cursor:pointer; display:flex; gap:10px; align-items:center; }
+  .choice:hover { border-color:var(--gold); } .choice .k { font-size:12px; opacity:.7; background:var(--dim); padding:2px 8px; border-radius:8px; white-space:nowrap; }
+  .roll { text-align:center; margin-top:8px; } .roll .lbl { opacity:.8; font-size:15px; }
+  .problem { font-size:clamp(40px,9vw,70px); font-weight:700; color:var(--gold); text-shadow:0 4px 0 #6b4d00; margin:4px 0; }
+  .answerRow { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; } .answerRow input { max-width:200px; text-align:center; font-size:32px; }
+  .pad { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; max-width:520px; margin:10px auto 0; }
+  .pad button { font:inherit; font-size:22px; font-weight:700; padding:10px 0; border:0; border-radius:12px; background:var(--dim); color:var(--ink); cursor:pointer; box-shadow:0 4px 0 #1f3355; }
+  .feedback { text-align:center; font-size:22px; font-weight:700; min-height:30px; margin-top:8px; } .good { color:var(--good); } .bad { color:var(--bad); }
+  .inv { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; font-size:14px; } .inv button { font:inherit; font-size:14px; padding:6px 10px; border-radius:10px; border:2px solid var(--dim); background:#0f1b30; color:var(--ink); cursor:pointer; }
+  .foot { text-align:center; font-size:12px; opacity:.55; margin-top:16px; } .foot a { color:var(--gold); }
+  .win { text-align:center; padding:20px; } .win h2 { color:var(--gold); font-size:32px; margin:6px 0; }
+  @media (max-width:560px) { .pad { grid-template-columns:repeat(4,1fr); } .fighter img { max-width:100%; } }
 </style>
 </head>
 <body>
-<header><h1>Math Quest: Goblin Grove</h1><div class="sub">Every monster guards a math riddle. Solve it to pass!</div></header>
+<header><h1>Math Quest: Goblin Grove</h1></header>
 <main>
   <section id="pick" class="screen on card">
     <label for="kid">What's your name, hero?</label>
     <input id="kid" type="text" maxlength="20" placeholder="Type your name" autocomplete="off">
     <label>Choose your hero</label>
     <div class="heroes" id="heroes"></div>
-    <div style="text-align:center"><button class="btn" id="startBtn" disabled>Enter the Grove!</button></div>
+    <div style="text-align:center"><button class="btn" id="startBtn" disabled>Begin the Quest!</button></div>
   </section>
 
   <section id="play" class="screen">
-    <div class="status">
-      <div>⭐ Streak: <b id="streak">0</b></div>
-      <div>Level <b id="bandNum">1</b>: <span id="bandName"></span></div>
-      <div class="ladder" id="ladder"></div>
-      <div>🏆 <b id="wins">0</b> solved</div>
-    </div>
+    <div class="quest"><div class="goal"><b>Quest:</b> <span id="goal"></span></div><div class="path" id="path"></div></div>
     <div class="card">
       <div class="arena">
-        <div class="fighter" id="heroBox"><img id="heroImg" alt=""><div class="name" id="heroName"></div></div>
-        <div class="fighter" id="monBox"><img id="monImg" alt=""><div class="name" id="monName"></div></div>
+        <div class="fighter" id="heroBox"><img id="heroImg" alt=""><div class="name" id="heroName"></div><div class="hearts" id="heroHearts"></div></div>
+        <div class="fighter" id="monBox"><img id="monImg" alt=""><div class="name" id="monName"></div><div class="hearts" id="monHearts"></div></div>
       </div>
       <div class="bubble dm"><span class="who">DM</span><span id="dmText"></span></div>
-      <div class="bubble"><span class="who" id="monWho"></span><span id="monText"></span></div>
-      <div class="problem" id="problem"></div>
-      <div class="answerRow">
-        <input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?">
-        <button class="btn" id="goBtn">Go!</button>
-        <button class="btn ghost" id="hintBtn">Hint</button>
+      <div class="bubble" id="monBubble"><span class="who" id="monWho"></span><span id="monText"></span></div>
+      <div class="choices" id="choices"></div>
+      <div class="roll" id="rollBox" style="display:none">
+        <div class="lbl">Roll to <b id="rollWhat"></b> — solve it!</div>
+        <div class="problem" id="problem"></div>
+        <div class="answerRow"><input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?"><button class="btn" id="goBtn">Roll!</button><button class="btn ghost" id="hintBtn">Hint</button></div>
+        <div class="feedback" id="feedback"></div>
+        <div id="hint" style="opacity:.85;min-height:22px"></div>
+        <div class="pad" id="pad"></div>
       </div>
-      <div class="feedback" id="feedback"></div>
-      <div class="hint" id="hint"></div>
-      <div class="pad" id="pad"></div>
+      <div class="inv" id="inv"></div>
     </div>
-    <div class="foot">DM: NVIDIA Nemotron on Nebius Token Factory · Art: generated · Banksy AI LLC · <a id="parentLink" href="/parent.html" style="color:var(--gold)">Parent view</a></div>
+    <div class="foot">Dungeon Master: NVIDIA Nemotron on Nebius Token Factory · Level <b id="bandNum"></b>: <span id="bandName"></span> · <a id="parentLink" href="/parent.html">Parent view</a></div>
   </section>
+
+  <section id="won" class="screen card win"><div>🏆</div><h2>Quest complete!</h2><p id="wonText"></p><button class="btn" id="againBtn">New quest</button></section>
 </main>
 <script>
 const HEROES = [
-  { id:"nova",   name:"Nova",   tag:"Star Sorceress" },
-  { id:"ember",  name:"Ember",  tag:"Fire Knight" },
-  { id:"kai",    name:"Kai",    tag:"Tide Ranger" },
-  { id:"willow", name:"Willow", tag:"Forest Guardian" },
+  { id:"nova",   name:"Nova",   tag:"Star Sorceress" }, { id:"ember",  name:"Ember",  tag:"Fire Knight" },
+  { id:"kai",    name:"Kai",    tag:"Tide Ranger" },    { id:"willow", name:"Willow", tag:"Forest Guardian" },
 ];
 const MON_NAMES = { gloomfang:"the Gloomfang", king:"the Goblin King", wyrmling:"Wyrmling" };
+const ICON = { sneak:"🤫", talk:"💬", fight:"⚔️", potion:"🧪", charm:"🍀", key:"🗝️" };
 const $ = (id) => document.getElementById(id);
-const state = { kid:"", hero:null, enc:null, wins:0, hintUsed:false };
+const S = { kid:"", hero:null, quest:null, items:{}, busy:false };
+const monName = (id) => MON_NAMES[id] || id[0].toUpperCase() + id.slice(1);
+const hearts = (n, max = 3) => "❤️".repeat(n) + "🖤".repeat(Math.max(0, max - n));
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 
-// --- hero picker ---
+// --- voice: Aura via the Worker, browser TTS as fallback ---
+const audio = new Audio(); let voiceOn = true;
+async function speak(text, voice = "dm") {
+  if (!voiceOn || !text) return;
+  try {
+    const r = await fetch("/api/say", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ text, voice }) });
+    if (!r.ok) throw new Error(r.status);
+    audio.src = URL.createObjectURL(await r.blob()); await audio.play();
+    await new Promise((res) => { audio.onended = res; audio.onerror = res; });
+  } catch {
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.95; speechSynthesis.speak(u); } catch {}
+  }
+}
+const say = (id, text) => { $(id).textContent = ""; let i = 0; const t = setInterval(() => { $(id).textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(t); }, 12); };
+
+async function api(path, body) {
+  const r = await fetch(path, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ kid: S.kid, ...body }) });
+  if (!r.ok) throw new Error(`${path} ${r.status}`);
+  return r.json();
+}
+
+// --- picker ---
 for (const h of HEROES) {
   const el = document.createElement("div"); el.className = "hero"; el.dataset.id = h.id;
   el.innerHTML = `<img src="/heroes/${h.id}_idle.webp" alt="${h.name}"><div class="n">${h.name}</div><div class="t">${h.tag}</div>`;
-  el.onclick = () => { state.hero = h; document.querySelectorAll(".hero").forEach(x => x.classList.toggle("sel", x === el)); gate(); };
+  el.onclick = () => { S.hero = h; document.querySelectorAll(".hero").forEach(x => x.classList.toggle("sel", x === el)); gate(); };
   $("heroes").appendChild(el);
 }
 $("kid").oninput = gate;
-function gate() { state.kid = $("kid").value.trim(); $("startBtn").disabled = !(state.kid && state.hero); }
+function gate() { S.kid = $("kid").value.trim(); $("startBtn").disabled = !(S.kid && S.hero); }
 try { const last = JSON.parse(localStorage.getItem("mq") || "null"); if (last) { $("kid").value = last.kid; document.querySelector(`.hero[data-id="${last.hero}"]`)?.click(); gate(); } } catch {}
-
-// --- number pad ---
 for (const k of ["1","2","3","4","5","6","7","8","9","0","/","⌫"]) {
   const b = document.createElement("button"); b.textContent = k;
   b.onclick = () => { const a = $("answer"); a.value = k === "⌫" ? a.value.slice(0,-1) : a.value + k; a.focus(); };
   $("pad").appendChild(b);
 }
 
-async function api(path, body) {
-  const r = await fetch(path, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify(body) });
-  if (!r.ok) throw new Error(`${path} ${r.status}`);
-  return r.json();
+// --- render the quest state ---
+function renderState(res) {
+  const q = res.quest; S.quest = q; S.items = res.items || S.items;
+  $("goal").textContent = q.goal;
+  $("path").innerHTML = [1,2,3,4,5,6].map(i => `<span class="${i < q.step ? "done" : i === q.step ? "here" : ""} ${i === 6 ? "boss" : ""}">${i === 6 ? "👑" : i < q.step ? "✓" : i}</span>`).join("");
+  $("heroImg").src = `/heroes/${S.hero.id}_idle.webp`; $("heroName").textContent = S.hero.name; $("heroHearts").textContent = hearts(q.hearts);
+  const m = q.scene.monster; $("monImg").src = `/monsters/${m}_idle.webp`; $("monName").textContent = monName(m);
+  $("monHearts").textContent = q.scene.boss || q.scene.monsterHearts > 1 ? hearts(q.scene.monsterHearts, q.scene.boss ? 3 : 2) : "❤️"; $("monWho").textContent = monName(m);
+  $("monBox").className = "fighter"; $("heroBox").className = "fighter";
+  $("bandNum").textContent = res.profile.band; $("bandName").textContent = res.profile.bandName;
+  $("inv").innerHTML = q.inventory.length ? `<span>🎒 Bag:</span>` + q.inventory.map((it, i) => `<button data-item="${it}" title="${esc(S.items[it]?.desc)}">${ICON[it]} ${esc(S.items[it]?.name || it)}</button>`).join("") : `<span style="opacity:.6">🎒 Bag: empty — beat a monster to find loot</span>`;
+  $("inv").querySelectorAll("button").forEach(b => b.onclick = () => useItem(b.dataset.item));
+}
+function showChoices(dm) {
+  $("rollBox").style.display = "none"; $("choices").innerHTML = "";
+  for (const a of ["sneak", "talk", "fight"]) {
+    const b = document.createElement("button"); b.className = "choice";
+    b.innerHTML = `<span>${ICON[a]}</span><span style="flex:1">${esc(dm.actions[a])}</span><span class="k">${a === "sneak" ? "easier roll" : a === "fight" ? (S.quest.scene.boss ? "boss: 3 hits" : "loot!") : "maybe loot"}</span>`;
+    b.onclick = () => act(a); $("choices").appendChild(b);
+  }
 }
 
-const say = (id, text) => { $(id).textContent = ""; let i = 0; const t = setInterval(() => { $(id).textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(t); }, 14); };
-const speak = (text) => { try { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.95; u.pitch = 1.1; speechSynthesis.speak(u); } catch {} };
-const monName = (id) => MON_NAMES[id] || id[0].toUpperCase() + id.slice(1);
-
-function render(profile, enc) {
-  state.enc = enc; state.hintUsed = false;
-  $("streak").textContent = profile.streak; $("wins").textContent = state.wins;
-  $("bandNum").textContent = profile.band; $("bandName").textContent = enc.bandName;
-  $("ladder").innerHTML = [1,2,3,4,5].map(b => `<div class="rung ${b <= profile.band ? "lit" : ""}"></div>`).join("");
-  $("heroImg").src = `/heroes/${state.hero.id}_idle.webp`; $("heroName").textContent = state.hero.name;
-  $("monBox").classList.remove("dizzy");
-  $("monImg").src = `/monsters/${enc.monster}_idle.webp`; $("monName").textContent = monName(enc.monster);
-  $("monWho").textContent = monName(enc.monster);
-  say("dmText", enc.dm.narration); setTimeout(() => say("monText", enc.dm.monster_line), 400);
-  speak(`${enc.dm.narration} ${enc.dm.monster_line}`);
-  $("problem").textContent = enc.text + " = ?";
-  $("answer").value = ""; $("feedback").textContent = ""; $("hint").textContent = ""; $("goBtn").disabled = false;
-  $("answer").focus();
+async function openScene(res) {
+  renderState(res);
+  $("monBubble").style.display = ""; say("dmText", res.dm.narration || ""); setTimeout(() => say("monText", res.dm.monster_line || ""), 300);
+  showChoices(res.dm);
+  await speak(res.dm.narration, "dm"); await speak(res.dm.monster_line, "monster");
 }
 
 $("startBtn").onclick = async () => {
   $("startBtn").disabled = true; $("startBtn").textContent = "Opening the gate…";
   try {
-    localStorage.setItem("mq", JSON.stringify({ kid: state.kid, hero: state.hero.id }));
-    const { profile, encounter } = await api("/api/start", { kid: state.kid, hero: state.hero.id });
-    $("pick").classList.remove("on"); $("play").classList.add("on");
-    $("parentLink").href = `/parent.html#${encodeURIComponent(state.kid)}`;
-    render(profile, encounter);
+    localStorage.setItem("mq", JSON.stringify({ kid: S.kid, hero: S.hero.id }));
+    const res = await api("/api/start", { hero: S.hero.id });
+    $("pick").classList.remove("on"); $("play").classList.add("on"); $("parentLink").href = `/parent.html#${encodeURIComponent(S.kid)}`;
+    await openScene(res);
   } catch (e) { alert("The grove is closed right now: " + e.message); }
-  $("startBtn").disabled = false; $("startBtn").textContent = "Enter the Grove!";
+  $("startBtn").disabled = false; $("startBtn").textContent = "Begin the Quest!";
 };
 
-$("hintBtn").onclick = () => { state.hintUsed = true; $("hint").textContent = `💡 ${state.enc.hint}`; speak(state.enc.dm.hint_line || state.enc.hint); };
+async function act(action) {
+  if (S.busy) return; S.busy = true;
+  $("choices").innerHTML = `<div style="opacity:.7;text-align:center">${ICON[action]} …</div>`;
+  try {
+    const res = await api("/api/act", { action });
+    renderState(res);
+    $("choices").innerHTML = ""; $("monBubble").style.display = "none";
+    say("dmText", res.dm.narration);
+    const p = res.quest.scene.problem;
+    $("rollWhat").textContent = action; $("problem").textContent = p.text + " = ?"; $("hint").textContent = ""; $("feedback").textContent = "";
+    $("answer").value = ""; $("goBtn").disabled = false; $("rollBox").style.display = ""; $("answer").focus();
+    $("hintBtn").onclick = () => { $("hint").textContent = `💡 ${p.hint}`; };
+    speak(res.dm.narration, "dm");
+  } catch (e) { $("choices").innerHTML = `<div class="bad">Hmm, the grove hiccuped. Try again.</div>`; setTimeout(() => showChoices({ actions: { sneak:"Sneak past", talk:"Talk it out", fight:"Fight!" } }), 1200); }
+  S.busy = false;
+}
 
 async function submit() {
-  const ans = $("answer").value.trim(); if (!ans || !state.enc) return;
-  $("goBtn").disabled = true;
-  const enc = state.enc;
+  const ans = $("answer").value.trim(); if (!ans || S.busy) return;
+  S.busy = true; $("goBtn").disabled = true;
+  const prev = S.quest, p = prev.scene.problem;
   try {
-    const res = await api("/api/answer", { kid: state.kid, band: enc.band, seed: enc.seed, monster: enc.monster, answer: ans });
-    if (res.correct) {
-      state.wins++;
-      $("monImg").src = `/monsters/${enc.monster}_dizzy.webp`; $("monBox").classList.add("dizzy");
-      $("heroImg").src = `/heroes/${state.hero.id}_cast.webp`;
-      $("feedback").innerHTML = `<span class="good">✨ Correct! ${monName(enc.monster)} is dizzy!</span>`;
-      speak("Correct!");
-    } else {
-      $("monImg").src = `/monsters/${enc.monster}_surprised.webp`;
-      $("feedback").innerHTML = `<span class="bad">Not quite — ${enc.text} = ${res.answer}. Next one!</span>`;
-      speak(`Not quite. ${enc.text.replace("×","times").replace("÷","divided by")} equals ${res.answer}.`);
-    }
-    setTimeout(() => render(res.profile, res.encounter), res.correct ? 1800 : 2600);
+    const res = await api("/api/answer", { answer: ans });
+    const o = res.outcome, ok = o.correct;
+    $("feedback").innerHTML = ok ? `<span class="good">✨ ${p.text} = ${o.answer} — success!</span>` : `<span class="bad">${p.text} = ${o.answer}. The ${monName(o.monster)} gets a turn!</span>`;
+    if (ok) { $("heroImg").src = `/heroes/${S.hero.id}_cast.webp`; if (o.kind === "monsterDown" || o.kind === "questWon") { $("monImg").src = `/monsters/${o.monster}_dizzy.webp`; $("monBox").classList.add("dizzy"); } else $("monImg").src = `/monsters/${o.monster}_surprised.webp`; }
+    else { $("heroBox").classList.add("hurt"); $("heroHearts").textContent = hearts(res.quest.hearts); }
+    say("dmText", res.outcomeDm.narration); await speak(res.outcomeDm.narration, "dm");
+    if (o.kind === "questWon") { $("play").classList.remove("on"); $("won").classList.add("on"); $("wonText").textContent = `${S.hero.name} recovered ${prev.reward}! Level ${res.profile.band}, ${res.profile.correctTotal} rolls won so far.`; S.busy = false; return; }
+    await new Promise(r => setTimeout(r, ok ? 700 : 1100));
+    if (res.dm && res.dm.narration) await openScene(res);           // new scene
+    else if (res.dm) { renderState(res); $("rollBox").style.display = "none"; $("monBubble").style.display = ""; showChoices(res.dm); }  // same monster, choose again
   } catch (e) { $("feedback").textContent = "Hmm, the grove hiccuped. Try again."; $("goBtn").disabled = false; }
+  S.busy = false;
 }
 $("goBtn").onclick = submit;
 $("answer").addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+
+async function useItem(item) {
+  if (S.busy) return; S.busy = true;
+  try {
+    const res = await api("/api/use", { item });
+    if (res.effect === "hint" && S.quest.scene.problem) $("hint").textContent = `🍀 ${S.quest.scene.problem.hint}`;
+    if (res.effect === "skip") { S.busy = false; await openScene(res); return; }
+    renderState(res); if (res.quest.scene.phase === "roll") $("rollBox").style.display = "";
+  } catch {}
+  S.busy = false;
+}
+$("againBtn").onclick = async () => { $("won").classList.remove("on"); $("play").classList.add("on"); await openScene(await api("/api/start", { hero: S.hero.id })); };
 </script>
 </body>
 </html>
