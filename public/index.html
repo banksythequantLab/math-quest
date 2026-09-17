@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Math Quest: Goblin Grove</title>
+<meta name="description" content="A K-5 math adventure: every monster guards a math riddle, and an NVIDIA Nemotron Dungeon Master on Nebius narrates the quest.">
+<meta property="og:title" content="Math Quest: Goblin Grove">
+<meta property="og:description" content="Beat the monsters with math. Kid-safe AI Dungeon Master, adaptive K-5 levels.">
+<meta property="og:image" content="/heroes/ember_cast.webp">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -82,7 +87,7 @@
       <div class="hint" id="hint"></div>
       <div class="pad" id="pad"></div>
     </div>
-    <div class="foot">DM: NVIDIA Nemotron on Nebius Token Factory · Art: generated · Banksy AI LLC</div>
+    <div class="foot">DM: NVIDIA Nemotron on Nebius Token Factory · Art: generated · Banksy AI LLC · <a id="parentLink" href="/parent.html" style="color:var(--gold)">Parent view</a></div>
   </section>
 </main>
 <script>
@@ -146,6 +151,7 @@ $("startBtn").onclick = async () => {
     localStorage.setItem("mq", JSON.stringify({ kid: state.kid, hero: state.hero.id }));
     const { profile, encounter } = await api("/api/start", { kid: state.kid, hero: state.hero.id });
     $("pick").classList.remove("on"); $("play").classList.add("on");
+    $("parentLink").href = `/parent.html#${encodeURIComponent(state.kid)}`;
     render(profile, encounter);
   } catch (e) { alert("The grove is closed right now: " + e.message); }
   $("startBtn").disabled = false; $("startBtn").textContent = "Enter the Grove!";

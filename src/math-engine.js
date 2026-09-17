@@ -87,8 +87,9 @@ export function nextBand(profile) {
 export function recordResult(profile, problem, correct) {
   const weak = { ...(profile.weak || {}) };
   if (!correct) weak[problem.family] = (weak[problem.family] || 0) + 1;
+  const history = [...(profile.history || []), { t: Date.now(), band: problem.band, family: problem.family, ok: correct }].slice(-200);
   const updated = {
-    ...profile, weak,
+    ...profile, weak, history,
     streak: correct ? (profile.streak || 0) + 1 : 0,
     misses: correct ? 0 : (profile.misses || 0) + 1,
     total: (profile.total || 0) + 1,
