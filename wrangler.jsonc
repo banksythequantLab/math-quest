@@ -1,0 +1,15 @@
+{
+  "name": "math-quest",
+  "main": "./worker/index.js",
+  "compatibility_date": "2026-06-23",
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "kv_namespaces": [
+    { "binding": "KIDS", "id": "REPLACE_WITH_wrangler_kv_namespace_create_KIDS" }
+  ],
+  "vars": {
+    "NEBIUS_BASE_URL": "https://api.tokenfactory.nebius.com/v1",
+    "DM_MODEL": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  }
+  // NEBIUS_API_KEY is a secret:  npx wrangler secret put NEBIUS_API_KEY
+  // local dev: put NEBIUS_API_KEY=... in .dev.vars (gitignored)
+}
