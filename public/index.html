@@ -7,125 +7,159 @@
 <meta name="description" content="A D&D-style adventure for kids where every roll is a math problem. NVIDIA Nemotron Dungeon Master on Nebius.">
 <meta property="og:title" content="Math Quest: Goblin Grove">
 <meta property="og:description" content="Pick a hero, chase the Goblin King, and roll with math. Kid-safe AI Dungeon Master.">
-<meta property="og:image" content="/heroes/ember_cast.webp">
+<meta property="og:image" content="/scenes/gate.webp">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#12213a; --panel:#1c3156; --ink:#f4f1ff; --gold:#ffcc4d; --good:#4ade80; --bad:#fb7185; --accent:#8b5cf6; --dim:#33507f; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:Fredoka, system-ui, sans-serif; background:radial-gradient(circle at 50% 0%, #24406e 0%, var(--bg) 60%); color:var(--ink); min-height:100vh; }
-  header { text-align:center; padding:12px 16px 2px; }
-  h1 { margin:0; font-size:clamp(22px,5vw,36px); color:var(--gold); text-shadow:0 3px 0 #7a5a00; }
-  main { max-width:960px; margin:0 auto; padding:10px 14px 40px; }
+  :root { --ink:#f7f3e8; --gold:#ffd166; --parch:#f3e6c8; --parchInk:#3b2a14; --good:#7ee8a0; --bad:#ff7b8f; --dim:rgba(20,30,50,.72); }
+  * { box-sizing:border-box; } html, body { height:100%; }
+  body { margin:0; font-family:Fredoka, system-ui, sans-serif; color:var(--ink); background:#0b1424; overflow-x:hidden; }
   .screen { display:none; } .screen.on { display:block; }
-  .card { background:var(--panel); border-radius:20px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
-  label { display:block; font-weight:600; margin:8px 0 4px; }
-  input[type=text] { width:100%; font:inherit; font-size:22px; padding:10px 14px; border-radius:14px; border:3px solid var(--dim); background:#0f1b30; color:var(--ink); }
-  .heroes { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:12px 0; }
-  .hero { cursor:pointer; border:4px solid transparent; border-radius:18px; overflow:hidden; background:#0f1b30; text-align:center; transition:transform .15s; }
-  .hero:hover { transform:translateY(-3px); } .hero.sel { border-color:var(--gold); }
-  .hero img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
-  .hero .n { padding:6px 6px 0; font-weight:700; } .hero .t { font-size:12px; opacity:.7; padding-bottom:8px; }
-  .btn { font:inherit; font-size:19px; font-weight:700; padding:12px 22px; border:0; border-radius:16px; cursor:pointer; background:var(--gold); color:#3a2a00; box-shadow:0 5px 0 #b38a1d; }
-  .btn:active { transform:translateY(3px); box-shadow:0 2px 0 #b38a1d; } .btn:disabled { opacity:.5; cursor:default; transform:none; }
-  .btn.ghost { background:var(--dim); color:var(--ink); box-shadow:0 5px 0 #1f3355; }
-  .quest { display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#0f1b30; border-radius:14px; padding:10px 14px; margin-bottom:10px; }
-  .quest .goal { flex:1; min-width:220px; font-size:15px; } .quest .goal b { color:var(--gold); }
-  .path { display:flex; gap:5px; align-items:center; } .path span { width:22px; height:22px; border-radius:50%; background:var(--dim); display:grid; place-items:center; font-size:12px; font-weight:700; }
-  .path span.done { background:var(--good); color:#053; } .path span.here { background:var(--gold); color:#3a2a00; box-shadow:0 0 0 3px #ffcc4d55; } .path span.boss { border:2px solid var(--bad); }
-  .arena { display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; }
-  .fighter { text-align:center; } .fighter img { width:100%; max-width:300px; aspect-ratio:1; object-fit:cover; border-radius:18px; background:#0f1b30; transition:transform .3s, filter .3s; }
-  .fighter .name { font-weight:700; margin-top:4px; font-size:18px; } .hearts { font-size:22px; letter-spacing:2px; min-height:28px; }
-  .dizzy img { transform:rotate(-8deg) scale(.95); filter:saturate(.5); } .hurt img { transform:translateX(-6px); filter:brightness(.7); }
-  .bubble { background:#fff; color:#222; border-radius:16px; padding:10px 14px; margin:10px 0 0; font-size:17px; }
-  .bubble.dm { background:#e9e3ff; } .bubble .who { font-weight:700; color:var(--accent); margin-right:6px; }
+
+  /* ---------- title / pick ---------- */
+  #pick { min-height:100vh; background:url(/scenes/gate.webp) center/cover fixed; position:relative; }
+  #pick::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(5,10,25,.55), rgba(5,10,25,.85)); }
+  .pickWrap { position:relative; max-width:900px; margin:0 auto; padding:28px 16px 40px; text-align:center; }
+  .title { font-family:Cinzel, serif; font-weight:900; font-size:clamp(34px,7vw,64px); color:var(--gold); text-shadow:0 4px 0 #6b4d00, 0 10px 30px rgba(0,0,0,.6); line-height:1; margin:10px 0 2px; }
+  .tag { opacity:.85; font-size:clamp(14px,2.5vw,18px); margin-bottom:22px; }
+  .nameBox { max-width:420px; margin:0 auto 18px; } .nameBox input { width:100%; font:inherit; font-size:24px; text-align:center; padding:12px; border-radius:16px; border:3px solid rgba(255,209,102,.5); background:rgba(10,18,35,.8); color:var(--ink); }
+  .heroes { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:0 auto 22px; max-width:820px; }
+  .heroes .hero { cursor:pointer; border:4px solid transparent; border-radius:18px; overflow:hidden; background:rgba(10,18,35,.75); transition:transform .15s, border-color .15s; }
+  .heroes .hero:hover { transform:translateY(-4px); } .heroes .hero.sel { border-color:var(--gold); box-shadow:0 0 0 4px rgba(255,209,102,.25), 0 12px 30px rgba(0,0,0,.5); }
+  .heroes .hero img { width:100%; aspect-ratio:1; object-fit:cover; display:block; } .heroes .hero .n { padding:6px 4px 0; font-weight:700; font-size:17px; } .heroes .hero .t { font-size:12px; opacity:.75; padding-bottom:8px; }
+  .btn { font:inherit; font-size:20px; font-weight:700; padding:13px 28px; border:0; border-radius:16px; cursor:pointer; background:var(--gold); color:#3a2a00; box-shadow:0 5px 0 #b38a1d, 0 10px 25px rgba(0,0,0,.4); }
+  .btn:active { transform:translateY(3px); box-shadow:0 2px 0 #b38a1d; } .btn:disabled { opacity:.45; cursor:default; transform:none; }
+  .btn.ghost { background:rgba(255,255,255,.14); color:var(--ink); box-shadow:0 5px 0 rgba(0,0,0,.35); }
+  @media (max-width:600px) { .heroes { grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- the stage ---------- */
+  #play { min-height:100vh; display:flex; flex-direction:column; }
+  .hud { display:flex; align-items:center; gap:12px; padding:8px 14px; background:linear-gradient(180deg, rgba(5,10,25,.95), rgba(5,10,25,.75)); font-size:14px; flex-wrap:wrap; }
+  .hud .q { flex:1; min-width:200px; } .hud .q b { color:var(--gold); font-family:Cinzel, serif; }
+  .map { display:flex; align-items:center; gap:0; } .map span { width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.15); display:grid; place-items:center; font-size:12px; font-weight:700; border:2px solid rgba(255,255,255,.25); }
+  .map i { width:14px; height:3px; background:rgba(255,255,255,.25); } .map span.done { background:var(--good); color:#053; border-color:var(--good); } .map span.here { background:var(--gold); color:#3a2a00; border-color:#fff; transform:scale(1.25); } .map span.boss { border-color:var(--bad); }
+  .stage { position:relative; width:100%; aspect-ratio:16/9; max-height:56vh; background:#0b1424 center/cover; overflow:hidden; transition:background-image .4s; }
+  .stage::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(5,10,25,.75)); pointer-events:none; }
+  .sprite { position:absolute; bottom:4%; height:78%; width:auto; z-index:2; filter:drop-shadow(0 12px 10px rgba(0,0,0,.55)); transition:transform .25s, filter .25s, opacity .3s; transform-origin:bottom center; }
+  .sprite.hero { left:8%; } .sprite.mon { right:8%; transform:scaleX(-1); }
+  .sprite.mon.enter { animation:enter .6s cubic-bezier(.2,1.4,.4,1); } @keyframes enter { from { transform:scaleX(-1) translateY(30px); opacity:0 } to { transform:scaleX(-1) translateY(0); opacity:1 } }
+  .sprite.mon.dizzy { transform:scaleX(-1) rotate(12deg) scale(.92); filter:saturate(.4) drop-shadow(0 12px 10px rgba(0,0,0,.55)); } .sprite.mon.hit { animation:shake .4s; } .sprite.hero.hit { animation:shakeH .4s; }
+  @keyframes shake { 0%,100% { transform:scaleX(-1) } 25% { transform:scaleX(-1) translateX(-14px) } 75% { transform:scaleX(-1) translateX(14px) } }
+  @keyframes shakeH { 0%,100% { transform:none } 25% { transform:translateX(14px) } 75% { transform:translateX(-14px) } }
+  .sprite.hero.cast { animation:cast .7s; } @keyframes cast { 30% { transform:scale(1.08) translateY(-10px); filter:drop-shadow(0 0 24px #ffd166) } }
+  .plate { position:absolute; z-index:3; bottom:6%; font-weight:700; font-size:15px; text-shadow:0 2px 4px #000; text-align:center; } .plate.hero { left:8%; width:26%; } .plate.mon { right:8%; width:26%; }
+  .plate .hearts { font-size:20px; letter-spacing:1px; } .plate .nm { font-family:Cinzel, serif; color:var(--gold); }
+  .place { position:absolute; top:10px; left:12px; z-index:3; background:rgba(5,10,25,.7); padding:4px 12px; border-radius:20px; font-size:13px; font-family:Cinzel, serif; letter-spacing:.5px; }
+  .fx { position:absolute; z-index:5; left:50%; top:38%; transform:translate(-50%,-50%); font-size:clamp(40px,8vw,72px); font-weight:900; font-family:Cinzel, serif; pointer-events:none; opacity:0; text-shadow:0 4px 0 rgba(0,0,0,.6); }
+  .fx.show { animation:pop 1.3s ease-out; } @keyframes pop { 0% { opacity:0; transform:translate(-50%,-50%) scale(.4) } 20% { opacity:1; transform:translate(-50%,-50%) scale(1.15) } 80% { opacity:1 } 100% { opacity:0; transform:translate(-50%,-70%) scale(1) } }
+
+  /* ---------- text box + choices ---------- */
+  .panel { flex:1; background:#0b1424; padding:10px 14px 24px; max-width:1000px; width:100%; margin:0 auto; }
+  .vn { display:grid; grid-template-columns:64px 1fr; gap:12px; background:var(--parch); color:var(--parchInk); border-radius:16px; padding:12px 14px; min-height:84px; box-shadow:inset 0 0 0 3px #d9c69a, 0 8px 20px rgba(0,0,0,.4); }
+  .vn .who { width:64px; height:64px; border-radius:12px; object-fit:cover; background:#c9b58c; } .vn .who.dm { display:grid; place-items:center; font-family:Cinzel, serif; font-weight:900; font-size:22px; color:#6b4d00; }
+  .vn .txt { font-size:18px; line-height:1.35; } .vn .txt b { font-family:Cinzel, serif; color:#6b4d00; font-size:14px; display:block; margin-bottom:2px; }
   .choices { display:grid; gap:10px; margin-top:12px; }
-  .choice { text-align:left; font:inherit; font-size:18px; padding:12px 14px; border:3px solid var(--dim); border-radius:14px; background:#0f1b30; color:var(--ink); cursor:pointer; display:flex; gap:10px; align-items:center; }
-  .choice:hover { border-color:var(--gold); } .choice .k { font-size:12px; opacity:.7; background:var(--dim); padding:2px 8px; border-radius:8px; white-space:nowrap; }
-  .roll { text-align:center; margin-top:8px; } .roll .lbl { opacity:.8; font-size:15px; }
-  .problem { font-size:clamp(40px,9vw,70px); font-weight:700; color:var(--gold); text-shadow:0 4px 0 #6b4d00; margin:4px 0; }
-  .answerRow { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; } .answerRow input { max-width:200px; text-align:center; font-size:32px; }
-  .pad { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; max-width:520px; margin:10px auto 0; }
-  .pad button { font:inherit; font-size:22px; font-weight:700; padding:10px 0; border:0; border-radius:12px; background:var(--dim); color:var(--ink); cursor:pointer; box-shadow:0 4px 0 #1f3355; }
-  .feedback { text-align:center; font-size:22px; font-weight:700; min-height:30px; margin-top:8px; } .good { color:var(--good); } .bad { color:var(--bad); }
-  .inv { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; font-size:14px; } .inv button { font:inherit; font-size:14px; padding:6px 10px; border-radius:10px; border:2px solid var(--dim); background:#0f1b30; color:var(--ink); cursor:pointer; }
-  .foot { text-align:center; font-size:12px; opacity:.55; margin-top:16px; } .foot a { color:var(--gold); }
-  .win { text-align:center; padding:20px; } .win h2 { color:var(--gold); font-size:32px; margin:6px 0; }
-  @media (max-width:560px) { .pad { grid-template-columns:repeat(4,1fr); } .fighter img { max-width:100%; } }
+  .choice { text-align:left; font:inherit; font-size:18px; padding:12px 14px; border:0; border-radius:14px; background:linear-gradient(180deg,#fbf1d6,#e9d7ae); color:var(--parchInk); cursor:pointer; display:flex; gap:12px; align-items:center; box-shadow:0 4px 0 #a8905e, 0 8px 16px rgba(0,0,0,.35); transition:transform .1s; }
+  .choice:hover { transform:translateY(-2px); } .choice:active { transform:translateY(2px); box-shadow:0 2px 0 #a8905e; }
+  .choice .ic { font-size:24px; } .choice .k { font-size:12px; opacity:.75; background:rgba(0,0,0,.08); padding:3px 9px; border-radius:8px; white-space:nowrap; font-weight:600; }
+  .inv { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; font-size:14px; opacity:.9; }
+  .inv button { font:inherit; font-size:14px; padding:6px 10px; border-radius:10px; border:2px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:var(--ink); cursor:pointer; }
+  .clues { margin-top:8px; font-size:13px; opacity:.8; } .clues span { display:inline-block; background:rgba(255,209,102,.12); border:1px solid rgba(255,209,102,.3); border-radius:8px; padding:2px 8px; margin:2px 4px 2px 0; }
+  .foot { text-align:center; font-size:12px; opacity:.5; margin-top:14px; } .foot a { color:var(--gold); }
+
+  /* ---------- the roll ---------- */
+  #rollBox { display:none; margin-top:12px; text-align:center; }
+  .die { width:150px; height:150px; margin:6px auto; position:relative; display:grid; place-items:center; }
+  .die svg { position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+  .die.spin svg { animation:spin .9s cubic-bezier(.2,.8,.2,1); } @keyframes spin { 0% { transform:rotate(0) scale(.6) } 60% { transform:rotate(380deg) scale(1.1) } 100% { transform:rotate(360deg) scale(1) } }
+  .die .face { position:relative; z-index:2; font-size:clamp(20px,4vw,28px); max-width:96px; line-height:1.1; font-weight:700; color:#fff; text-shadow:0 3px 0 rgba(0,0,0,.5); opacity:0; transition:opacity .3s .7s; } .die.spin .face, .die.set .face { opacity:1; }
+  .rollLbl { font-family:Cinzel, serif; color:var(--gold); font-size:16px; letter-spacing:1px; }
+  .answerRow { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin-top:6px; }
+  .answerRow input { width:170px; font:inherit; font-size:34px; text-align:center; padding:8px; border-radius:14px; border:3px solid rgba(255,209,102,.5); background:rgba(10,18,35,.9); color:var(--ink); }
+  .pad { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; max-width:500px; margin:10px auto 0; }
+  .pad button { font:inherit; font-size:22px; font-weight:700; padding:10px 0; border:0; border-radius:12px; background:rgba(255,255,255,.12); color:var(--ink); cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,.4); } .pad button:active { transform:translateY(3px); box-shadow:none; }
+  .feedback { font-size:22px; font-weight:700; min-height:30px; margin-top:8px; } .good { color:var(--good); } .bad { color:var(--bad); }
+  #hint { min-height:22px; opacity:.85; }
+  #won { min-height:100vh; background:url(/scenes/throne.webp) center/cover; display:grid; place-items:center; text-align:center; padding:20px; }
+  #won .box { background:rgba(5,10,25,.85); border-radius:22px; padding:28px 26px; max-width:520px; } #won h2 { font-family:Cinzel, serif; color:var(--gold); font-size:34px; margin:6px 0; }
+  @media (max-width:600px) { .pad { grid-template-columns:repeat(4,1fr); } .sprite { height:70%; } .sprite.hero { left:3%; } .sprite.mon { right:3%; } .plate.hero { left:2%; width:34%; } .plate.mon { right:2%; width:34%; } .vn { grid-template-columns:48px 1fr; } .vn .who { width:48px; height:48px; } .vn .txt { font-size:16px; } }
 </style>
 </head>
 <body>
-<header><h1>Math Quest: Goblin Grove</h1></header>
-<main>
-  <section id="pick" class="screen on card">
-    <label for="kid">What's your name, hero?</label>
-    <input id="kid" type="text" maxlength="20" placeholder="Type your name" autocomplete="off">
-    <label>Choose your hero</label>
+  <section id="pick" class="screen on"><div class="pickWrap">
+    <div class="title">Math Quest</div><div class="tag">Goblin Grove · a quest where every roll is a math problem</div>
+    <div class="nameBox"><input id="kid" type="text" maxlength="20" placeholder="Your hero's name" autocomplete="off"></div>
     <div class="heroes" id="heroes"></div>
-    <div style="text-align:center"><button class="btn" id="startBtn" disabled>Begin the Quest!</button></div>
-  </section>
+    <button class="btn" id="startBtn" disabled>Begin the Quest</button>
+  </div></section>
 
   <section id="play" class="screen">
-    <div class="quest"><div class="goal"><b>Quest:</b> <span id="goal"></span></div><div class="path" id="path"></div></div>
-    <div class="card">
-      <div class="arena">
-        <div class="fighter" id="heroBox"><img id="heroImg" alt=""><div class="name" id="heroName"></div><div class="hearts" id="heroHearts"></div></div>
-        <div class="fighter" id="monBox"><img id="monImg" alt=""><div class="name" id="monName"></div><div class="hearts" id="monHearts"></div></div>
-      </div>
-      <div class="bubble dm"><span class="who">DM</span><span id="dmText"></span></div>
-      <div class="bubble" id="monBubble"><span class="who" id="monWho"></span><span id="monText"></span></div>
-      <div class="choices" id="choices"></div>
-      <div class="roll" id="rollBox" style="display:none">
-        <div class="lbl">Roll to <b id="rollWhat"></b> — solve it!</div>
-        <div class="problem" id="problem"></div>
-        <div class="answerRow"><input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?"><button class="btn" id="goBtn">Roll!</button><button class="btn ghost" id="hintBtn">Hint</button></div>
-        <div class="feedback" id="feedback"></div>
-        <div id="hint" style="opacity:.85;min-height:22px"></div>
-        <div class="pad" id="pad"></div>
-      </div>
-      <div class="inv" id="inv"></div>
+    <div class="hud"><div class="q"><b id="qtitle"></b> — <span id="goal"></span></div><div class="map" id="path"></div></div>
+    <div class="stage" id="stage">
+      <div class="place" id="place"></div>
+      <img class="sprite hero" id="heroImg" alt=""><img class="sprite mon" id="monImg" alt="">
+      <div class="plate hero"><div class="nm" id="heroName"></div><div class="hearts" id="heroHearts"></div></div>
+      <div class="plate mon"><div class="nm" id="monName"></div><div class="hearts" id="monHearts"></div></div>
+      <div class="fx" id="fx"></div>
     </div>
-    <div class="foot">Dungeon Master: NVIDIA Nemotron on Nebius Token Factory · Level <b id="bandNum"></b>: <span id="bandName"></span> · <a id="parentLink" href="/parent.html">Parent view</a></div>
+    <div class="panel">
+      <div class="vn"><div id="whoBox"></div><div class="txt"><b id="who"></b><span id="txt"></span></div></div>
+      <div class="choices" id="choices"></div>
+      <div id="rollBox">
+        <div class="rollLbl">ROLL TO <span id="rollWhat"></span></div>
+        <div class="die" id="die"><svg viewBox="0 0 100 100"><polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#c0392b" stroke="#ffd166" stroke-width="4"/><polygon points="50,24 74,38 74,62 50,76 26,62 26,38" fill="#e74c3c" stroke="#ffd166" stroke-width="2"/></svg><div class="face" id="problem"></div></div>
+        <div class="answerRow"><input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="?"><button class="btn" id="goBtn">Roll!</button><button class="btn ghost" id="hintBtn">Hint</button></div>
+        <div class="feedback" id="feedback"></div><div id="hint"></div><div class="pad" id="pad"></div>
+      </div>
+      <div class="inv" id="inv"></div><div class="clues" id="clues"></div>
+      <div class="foot">Dungeon Master: NVIDIA Nemotron on Nebius Token Factory · Level <b id="bandNum"></b>: <span id="bandName"></span> · <a id="parentLink" href="/parent.html">Parent view</a></div>
+    </div>
   </section>
-
-  <section id="won" class="screen card win"><div>🏆</div><h2>Quest complete!</h2><p id="wonText"></p><button class="btn" id="againBtn">New quest</button></section>
-</main>
+  <section id="won" class="screen"><div class="box"><div style="font-size:48px">🏆</div><h2>Quest complete!</h2><p id="wonText"></p><button class="btn" id="againBtn">New quest</button></div></section>
 <script>
 const HEROES = [
   { id:"nova",   name:"Nova",   tag:"Star Sorceress" }, { id:"ember",  name:"Ember",  tag:"Fire Knight" },
   { id:"kai",    name:"Kai",    tag:"Tide Ranger" },    { id:"willow", name:"Willow", tag:"Forest Guardian" },
 ];
-const MON_NAMES = { gloomfang:"the Gloomfang", king:"the Goblin King", wyrmling:"Wyrmling" };
 const ICON = { sneak:"🤫", talk:"💬", fight:"⚔️", potion:"🧪", charm:"🍀", key:"🗝️" };
 const $ = (id) => document.getElementById(id);
-const S = { kid:"", hero:null, quest:null, items:{}, busy:false };
-const monName = (id) => MON_NAMES[id] || id[0].toUpperCase() + id.slice(1);
+const S = { kid:"", hero:null, quest:null, scene:null, items:{}, busy:false };
 const hearts = (n, max = 3) => "❤️".repeat(n) + "🖤".repeat(Math.max(0, max - n));
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const sprite = (kind, id, state) => `/sprites/${kind}/${id}_${state}.png`;
 
-// --- voice: Aura via the Worker, browser TTS as fallback ---
-const audio = new Audio(); let voiceOn = true;
+// ---- voice: Aura via the Worker, browser TTS fallback ----
+// One Audio element, unlocked inside the user's tap (mobile autoplay rules). No robot fallback — silence + text is better.
+const audio = new Audio(); audio.preload = "auto"; let voiceOn = true, unlocked = false;
+function unlockAudio() {
+  if (unlocked) return; unlocked = true;
+  try { audio.src = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAGbZHBgG1OF6zM82DWbZaUmMBptgQhGjsyYqc9ae9XFz280948NMBWInluyfDL/9d/+Ln9YmSf9uTlHSqAAP/7UMQAA"; audio.play().catch(() => {}); } catch {}
+}
 async function speak(text, voice = "dm") {
   if (!voiceOn || !text) return;
   try {
     const r = await fetch("/api/say", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ text, voice }) });
-    if (!r.ok) throw new Error(r.status);
-    audio.src = URL.createObjectURL(await r.blob()); await audio.play();
+    if (!r.ok) return;
+    audio.src = URL.createObjectURL(await r.blob());
+    await audio.play();
     await new Promise((res) => { audio.onended = res; audio.onerror = res; });
-  } catch {
-    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.95; speechSynthesis.speak(u); } catch {}
-  }
+  } catch { /* blocked or failed: the text is on screen, that's fine */ }
 }
-const say = (id, text) => { $(id).textContent = ""; let i = 0; const t = setInterval(() => { $(id).textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(t); }, 12); };
-
+// visual-novel text box: who + typewriter text; returns when typed
+function vn(who, text, portrait) {
+  $("who").textContent = who; $("txt").textContent = "";
+  $("whoBox").innerHTML = portrait ? `<img class="who" src="${portrait}" alt="">` : `<div class="who dm">DM</div>`;
+  return new Promise((res) => { let i = 0; const t = setInterval(() => { $("txt").textContent = text.slice(0, ++i); if (i >= text.length) { clearInterval(t); res(); } }, 11); });
+}
 async function api(path, body) {
   const r = await fetch(path, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ kid: S.kid, ...body }) });
   if (!r.ok) throw new Error(`${path} ${r.status}`);
   return r.json();
 }
 
-// --- picker ---
+// ---- picker ----
 for (const h of HEROES) {
   const el = document.createElement("div"); el.className = "hero"; el.dataset.id = h.id;
   el.innerHTML = `<img src="/heroes/${h.id}_idle.webp" alt="${h.name}"><div class="n">${h.name}</div><div class="t">${h.tag}</div>`;
@@ -141,94 +175,99 @@ for (const k of ["1","2","3","4","5","6","7","8","9","0","/","⌫"]) {
   $("pad").appendChild(b);
 }
 
-// --- render the quest state ---
-function renderState(res) {
-  const q = res.quest; S.quest = q; S.items = res.items || S.items;
-  $("goal").textContent = q.goal;
-  $("path").innerHTML = [1,2,3,4,5,6].map(i => `<span class="${i < q.step ? "done" : i === q.step ? "here" : ""} ${i === 6 ? "boss" : ""}">${i === 6 ? "👑" : i < q.step ? "✓" : i}</span>`).join("");
-  $("heroImg").src = `/heroes/${S.hero.id}_idle.webp`; $("heroName").textContent = S.hero.name; $("heroHearts").textContent = hearts(q.hearts);
-  const m = q.scene.monster; $("monImg").src = `/monsters/${m}_idle.webp`; $("monName").textContent = monName(m);
-  $("monHearts").textContent = q.scene.boss || q.scene.monsterHearts > 1 ? hearts(q.scene.monsterHearts, q.scene.boss ? 3 : 2) : "❤️"; $("monWho").textContent = monName(m);
-  $("monBox").className = "fighter"; $("heroBox").className = "fighter";
+// ---- render state onto the stage ----
+function render(res) {
+  const q = res.quest; S.quest = q; S.scene = res.scene; S.items = res.items || S.items;
+  $("qtitle").textContent = q.title || "Quest"; $("goal").textContent = q.goal;
+  $("path").innerHTML = [1,2,3,4,5,6].map(i => `<span class="${i < q.step ? "done" : i === q.step ? "here" : ""} ${i === 6 ? "boss" : ""}">${i === 6 ? "👑" : i < q.step ? "✓" : i}</span>${i < 6 ? "<i></i>" : ""}`).join("");
+  $("stage").style.backgroundImage = `url(/scenes/${res.scene.location}.webp)`; $("place").textContent = res.scene.place;
+  $("heroImg").src = sprite("heroes", S.hero.id, "idle"); $("heroName").textContent = S.hero.name; $("heroHearts").textContent = hearts(q.hearts);
+  $("monImg").src = sprite("monsters", q.scene.monster, "idle"); $("monName").textContent = res.scene.monsterName;
+  $("monHearts").textContent = q.scene.boss ? hearts(q.scene.monsterHearts, 3) : q.scene.monsterHearts > 1 ? hearts(q.scene.monsterHearts, 2) : "❤️";
+  $("monImg").className = "sprite mon"; $("heroImg").className = "sprite hero";
   $("bandNum").textContent = res.profile.band; $("bandName").textContent = res.profile.bandName;
-  $("inv").innerHTML = q.inventory.length ? `<span>🎒 Bag:</span>` + q.inventory.map((it, i) => `<button data-item="${it}" title="${esc(S.items[it]?.desc)}">${ICON[it]} ${esc(S.items[it]?.name || it)}</button>`).join("") : `<span style="opacity:.6">🎒 Bag: empty — beat a monster to find loot</span>`;
+  $("inv").innerHTML = q.inventory.length ? `<span>🎒</span>` + q.inventory.map(it => `<button data-item="${it}" title="${esc(S.items[it]?.desc)}">${ICON[it]} ${esc(S.items[it]?.name || it)}</button>`).join("") : `<span style="opacity:.55">🎒 empty — beat a monster to find loot</span>`;
   $("inv").querySelectorAll("button").forEach(b => b.onclick = () => useItem(b.dataset.item));
+  $("clues").innerHTML = (q.clues || []).length ? `🔍 ` + q.clues.map(c => `<span>${esc(c)}</span>`).join("") : "";
 }
 function showChoices(dm) {
   $("rollBox").style.display = "none"; $("choices").innerHTML = "";
   for (const a of ["sneak", "talk", "fight"]) {
     const b = document.createElement("button"); b.className = "choice";
-    b.innerHTML = `<span>${ICON[a]}</span><span style="flex:1">${esc(dm.actions[a])}</span><span class="k">${a === "sneak" ? "easier roll" : a === "fight" ? (S.quest.scene.boss ? "boss: 3 hits" : "loot!") : "maybe loot"}</span>`;
+    b.innerHTML = `<span class="ic">${ICON[a]}</span><span style="flex:1">${esc(dm.actions[a])}</span><span class="k">${a === "sneak" ? "easier roll" : a === "fight" ? (S.quest.scene.boss ? "boss · 3 hits" : "loot!") : "make a friend"}</span>`;
     b.onclick = () => act(a); $("choices").appendChild(b);
   }
 }
 
 async function openScene(res) {
-  renderState(res);
-  $("monBubble").style.display = ""; say("dmText", res.dm.narration || ""); setTimeout(() => say("monText", res.dm.monster_line || ""), 300);
+  render(res); $("choices").innerHTML = ""; $("rollBox").style.display = "none";
+  $("monImg").classList.add("enter");
+  const p1 = vn("Dungeon Master", res.dm.narration); await Promise.all([p1, speak(res.dm.narration, "dm")]);
+  const p2 = vn(res.scene.monsterName, res.dm.monster_line, `/monsters/${S.quest.scene.monster}_idle.webp`); await Promise.all([p2, speak(res.dm.monster_line, "monster")]);
   showChoices(res.dm);
-  await speak(res.dm.narration, "dm"); await speak(res.dm.monster_line, "monster");
 }
-
 $("startBtn").onclick = async () => {
+  unlockAudio();
   $("startBtn").disabled = true; $("startBtn").textContent = "Opening the gate…";
   try {
     localStorage.setItem("mq", JSON.stringify({ kid: S.kid, hero: S.hero.id }));
     const res = await api("/api/start", { hero: S.hero.id });
-    $("pick").classList.remove("on"); $("play").classList.add("on"); $("parentLink").href = `/parent.html#${encodeURIComponent(S.kid)}`;
+    $("pick").classList.remove("on"); $("play").classList.add("on"); $("parentLink").href = `/parent.html#${encodeURIComponent(S.kid)}`; window.scrollTo(0, 0);
     await openScene(res);
   } catch (e) { alert("The grove is closed right now: " + e.message); }
-  $("startBtn").disabled = false; $("startBtn").textContent = "Begin the Quest!";
+  $("startBtn").disabled = false; $("startBtn").textContent = "Begin the Quest";
 };
-
 async function act(action) {
-  if (S.busy) return; S.busy = true;
-  $("choices").innerHTML = `<div style="opacity:.7;text-align:center">${ICON[action]} …</div>`;
+  if (S.busy) return; S.busy = true; $("choices").innerHTML = "";
   try {
-    const res = await api("/api/act", { action });
-    renderState(res);
-    $("choices").innerHTML = ""; $("monBubble").style.display = "none";
-    say("dmText", res.dm.narration);
+    const res = await api("/api/act", { action }); render(res);
     const p = res.quest.scene.problem;
-    $("rollWhat").textContent = action; $("problem").textContent = p.text + " = ?"; $("hint").textContent = ""; $("feedback").textContent = "";
-    $("answer").value = ""; $("goBtn").disabled = false; $("rollBox").style.display = ""; $("answer").focus();
+    $("rollWhat").textContent = action.toUpperCase(); $("problem").textContent = ""; $("hint").textContent = ""; $("feedback").textContent = ""; $("answer").value = ""; $("goBtn").disabled = false;
+    $("rollBox").style.display = "block"; $("die").className = "die";
     $("hintBtn").onclick = () => { $("hint").textContent = `💡 ${p.hint}`; };
-    speak(res.dm.narration, "dm");
-  } catch (e) { $("choices").innerHTML = `<div class="bad">Hmm, the grove hiccuped. Try again.</div>`; setTimeout(() => showChoices({ actions: { sneak:"Sneak past", talk:"Talk it out", fight:"Fight!" } }), 1200); }
+    const pv = vn("Dungeon Master", res.dm.narration); speak(res.dm.narration, "dm"); await pv;
+    $("die").className = "die spin"; await sleep(650); $("problem").textContent = p.text + " = ?"; await sleep(400); $("die").className = "die set";
+    $("answer").focus(); $("rollBox").scrollIntoView({ behavior:"smooth", block:"nearest" });
+  } catch (e) { await vn("Dungeon Master", "Hmm, the grove hiccuped. Try again."); showChoices({ actions: { sneak:"Sneak past", talk:"Talk it out", fight:"Fight!" } }); }
   S.busy = false;
 }
+function fx(text, cls) { const e = $("fx"); e.textContent = text; e.className = "fx " + cls; void e.offsetWidth; e.classList.add("show"); }
 
 async function submit() {
   const ans = $("answer").value.trim(); if (!ans || S.busy) return;
   S.busy = true; $("goBtn").disabled = true;
-  const prev = S.quest, p = prev.scene.problem;
+  const prev = S.quest, p = prev.scene.problem, mon = prev.scene.monster, monName = S.scene.monsterName;
   try {
     const res = await api("/api/answer", { answer: ans });
     const o = res.outcome, ok = o.correct;
-    $("feedback").innerHTML = ok ? `<span class="good">✨ ${p.text} = ${o.answer} — success!</span>` : `<span class="bad">${p.text} = ${o.answer}. The ${monName(o.monster)} gets a turn!</span>`;
-    if (ok) { $("heroImg").src = `/heroes/${S.hero.id}_cast.webp`; if (o.kind === "monsterDown" || o.kind === "questWon") { $("monImg").src = `/monsters/${o.monster}_dizzy.webp`; $("monBox").classList.add("dizzy"); } else $("monImg").src = `/monsters/${o.monster}_surprised.webp`; }
-    else { $("heroBox").classList.add("hurt"); $("heroHearts").textContent = hearts(res.quest.hearts); }
-    say("dmText", res.outcomeDm.narration); await speak(res.outcomeDm.narration, "dm");
-    if (o.kind === "questWon") { $("play").classList.remove("on"); $("won").classList.add("on"); $("wonText").textContent = `${S.hero.name} recovered ${prev.reward}! Level ${res.profile.band}, ${res.profile.correctTotal} rolls won so far.`; S.busy = false; return; }
-    await new Promise(r => setTimeout(r, ok ? 700 : 1100));
-    if (res.dm && res.dm.narration) await openScene(res);           // new scene
-    else if (res.dm) { renderState(res); $("rollBox").style.display = "none"; $("monBubble").style.display = ""; showChoices(res.dm); }  // same monster, choose again
+    $("feedback").innerHTML = ok ? `<span class="good">${p.text} = ${o.answer} ✓</span>` : `<span class="bad">${p.text} = ${o.answer}</span>`;
+    if (ok) {
+      $("heroImg").classList.add("cast"); await sleep(350);
+      if (o.kind === "monsterDown" || o.kind === "questWon") { $("monImg").src = sprite("monsters", mon, "dizzy"); $("monImg").classList.add("dizzy"); fx("KNOCKOUT!", "good"); }
+      else if (o.kind === "passed") { fx(o.action === "talk" ? "FRIEND!" : "SNUCK PAST!", "good"); $("monImg").src = sprite("monsters", mon, "surprised"); }
+      else { $("monImg").src = sprite("monsters", mon, "surprised"); $("monImg").classList.add("hit"); fx("HIT!", "good"); }
+    } else { $("monImg").src = sprite("monsters", mon, "surprised"); $("heroImg").classList.add("hit"); fx("MISS!", "bad"); $("heroHearts").textContent = hearts(res.quest.hearts); }
+    const pv = vn("Dungeon Master", res.outcomeDm.narration); await Promise.all([pv, speak(res.outcomeDm.narration, "dm")]);
+    if (o.loot) fx(`${ICON[o.loot]} ${S.items[o.loot]?.name || o.loot}`, "good");
+    if (o.kind === "questWon") { await sleep(600); $("play").classList.remove("on"); $("won").classList.add("on"); $("wonText").textContent = `${S.hero.name} recovered ${prev.reward}! Level ${res.profile.band} · ${res.profile.correctTotal} rolls won.`; S.busy = false; return; }
+    await sleep(ok ? 500 : 900);
+    if (res.dm && res.dm.narration) await openScene(res);
+    else if (res.dm) { render(res); $("rollBox").style.display = "none"; showChoices(res.dm); }
   } catch (e) { $("feedback").textContent = "Hmm, the grove hiccuped. Try again."; $("goBtn").disabled = false; }
   S.busy = false;
 }
-$("goBtn").onclick = submit;
-$("answer").addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
-
+$("goBtn").onclick = submit; $("answer").addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
 async function useItem(item) {
   if (S.busy) return; S.busy = true;
   try {
     const res = await api("/api/use", { item });
     if (res.effect === "hint" && S.quest.scene.problem) $("hint").textContent = `🍀 ${S.quest.scene.problem.hint}`;
     if (res.effect === "skip") { S.busy = false; await openScene(res); return; }
-    renderState(res); if (res.quest.scene.phase === "roll") $("rollBox").style.display = "";
+    render(res); if (res.quest.scene.phase === "roll") $("rollBox").style.display = "block";
   } catch {}
   S.busy = false;
 }
+document.addEventListener("pointerdown", unlockAudio, { once: true });
 $("againBtn").onclick = async () => { $("won").classList.remove("on"); $("play").classList.add("on"); await openScene(await api("/api/start", { hero: S.hero.id })); };
 </script>
 </body>
